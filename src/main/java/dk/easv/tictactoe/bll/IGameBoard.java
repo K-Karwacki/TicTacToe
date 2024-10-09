@@ -28,10 +28,10 @@ public interface IGameBoard
 
     int getBoardWidth();
 
-    String getNextPlayerMark();
-    String getCurrentPlayerMark();
+    String getPlayerMark(int player);
 
     boolean isPositionTaken(int row, int col);
+
 
     boolean isBoardFull();
     /**
@@ -53,4 +53,5 @@ public interface IGameBoard
      * Resets the game to a new game state.
      */
     void newGame();
+    int getCurrentPlayer();
 }

@@ -49,30 +49,16 @@ public class TicTacViewController implements Initializable
         Integer col = GridPane.getColumnIndex((Node) event.getSource());
         int r = (row == null) ? 0 : row;
         int c = (col == null) ? 0 : col;
-//        System.out.println(r + " KLIKAM " + c);
+
         Button b = (Button)event.getSource();
-//        System.out.println(game.getCurrentPlayerMark());
-//        System.out.println(Arrays.deepToString(game.getCurrentBoardState()));
+
         if(game.play(c,r)){
-            b.setText(game.getCurrentPlayerMark());
-            setPlayer();
+            b.setText(game.getPlayerMark(game.getCurrentPlayer()));
+            setPlayerLbl();
             if(game.isGameOver()){
                 displayWinner(game.getWinner());
             };
         }
-//        if(!game.isPositionTaken(r,c)){
-//        }
-//        if(!game.isPositionTaken(r,c) && !game.isGameOver()){
-//            if(game.play(c,r)){
-//                setPlayer();
-//                if(game.getWinner() != -1){
-//                    displayWinner(game.getWinner());
-//                }
-//            };
-//
-//        }
-
-
     }
 
     /**
@@ -86,7 +72,7 @@ public class TicTacViewController implements Initializable
         game.newGame();
         clearBoard();
 //        lblPlayer.setText(TXT_PLAYER + game.getCurrentPlayerMark());
-        setPlayer();
+        setPlayerLbl();
     }
 
     /**
@@ -104,23 +90,17 @@ public class TicTacViewController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         game = new GameBoard(3);
-        setPlayer();
+        setPlayerLbl();
 //        lblPlayer.setText(TXT_PLAYER + game.getCurrentPlayerMark());
     }
 
     /**
      * Set the next player
      */
-    private void setPlayer()
+    private void setPlayerLbl()
     {
-        String mark = null;
-        if(game.getNextPlayer() == 1){
-            mark = "0";
-        }else{
-            mark ="X";
-        }
-
-        lblPlayer.setText(TXT_PLAYER + mark);
+        String nextMoveMark = game.getPlayerMark(game.getNextPlayer());
+        lblPlayer.setText("Next move by: " + nextMoveMark);
     }
 
 
@@ -132,8 +112,8 @@ public class TicTacViewController implements Initializable
     {
         String message = switch (winner)
             {
-                case 0 -> "Player: " + "O" + " wins!!!";
-                case 1 -> "Player " + "X" + " wins!!!";
+                case 0 -> "Player: " + winner + " wins!!!";
+                case 1 -> "Player " + "O" + " wins!!!";
                 case -1 -> "It's a draw!";
                 default -> "TicTacToe";
             };

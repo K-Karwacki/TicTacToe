@@ -62,6 +62,10 @@ public class GameBoard implements IGameBoard {
         currentPlayer = 0; // Reset to Player 1
     }
 
+    @Override public int getCurrentPlayer()
+    {
+        return currentPlayer;
+    }
 
     public boolean play(int col, int row) {
         // Check if the game is over
@@ -86,19 +90,15 @@ public class GameBoard implements IGameBoard {
         if (checkWin(col, row)) {
             gameOver = true;
             winner = currentPlayer;
-//            System.out.println("the winner is: " + currentPlayer);
-            switchPlayer();
         }
+
         // If the board is full and no win, it's a draw
         else if (isBoardFull()) {
             gameOver = true;
             winner = -1;  // Draw
         }
-        // Otherwise, switch to the next player
-        else {
-            switchPlayer();
-        }
 
+        switchPlayer();
         return true;  // Move is successful
     }
 
@@ -107,20 +107,13 @@ public class GameBoard implements IGameBoard {
         return width;
     }
 
-    @Override public String getCurrentPlayerMark()
+    @Override public String getPlayerMark(int player)
     {
-        if(currentPlayer == 0){
-            return "X";
-        }else if(currentPlayer == 1){
+        if(player == 0){
             return "O";
+        }else{
+            return "X";
         }
-        return "";
-    }
-
-    @Override public String getNextPlayerMark()
-    {
-
-        return "";
     }
 
     private void switchPlayer() {
