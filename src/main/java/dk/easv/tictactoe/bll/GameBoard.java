@@ -16,6 +16,7 @@ public class GameBoard implements IGameBoard {
     private int cols;
     private int width;
 
+    // Constructor to initialize the board
     public GameBoard(int width){
         this.width = width;
         this.rows = width;
@@ -23,29 +24,14 @@ public class GameBoard implements IGameBoard {
         this.board = new int[width][width];
         this.newGame();;
     }
-    // Constructor to initialize the board
-    public GameBoard(int rows, int cols) {
-        this.rows = rows;
-        this.cols = cols;
-        this.board = new int[rows][cols]; // Initialize the board with the given size
-        this.newGame(); // Reset game state
-    }
 
     // Default constructor (optional)
     public GameBoard() {
-        this(3, 3); // Default to a 3x3 board
+        this(3); // Default to a 3x3 board
     }
 
-
-
-    // Implement the getNextPlayer method as required by IGameBoard
-    @Override
     public int getNextPlayer() {
-        if(currentPlayer == 0){
-            return 1;
-        }else{
-            return 0;
-        }
+        return (currentPlayer + 1) % TOTAL_PLAYERS;
     }
 
     public void newGame() {
@@ -62,12 +48,23 @@ public class GameBoard implements IGameBoard {
         currentPlayer = 0; // Reset to Player 1
     }
 
-    @Override public int getCurrentPlayer()
+    public int getCurrentPlayer()
     {
         return currentPlayer;
     }
 
-    public boolean play(int col, int row) {
+    public void resetPosition(int row, int col) {
+        board[row][col] = 0;
+    }
+
+    public int getPosition(int row, int col) {
+        return board[row][col];
+    }
+
+    public boolean play(int row, int col, int player) {
+        if(player != currentPlayer){
+            return false;
+        }
         // Check if the game is over
         if (gameOver) {
             return false;
@@ -84,40 +81,49 @@ public class GameBoard implements IGameBoard {
         }
 
         // Place the current player's marker
-        board[row][col] = currentPlayer + 1; // Store 1 or 2 (for Player 1 or Player 2)
+        board[row][col] = player + 1; // Store 1 or 2 (for Player 1 or Player 2)
 
-        // Check if this move results in a win for the current player
+//        // Check if this move results in a win for the current player
         if (checkWin(col, row)) {
             gameOver = true;
-            winner = currentPlayer;
+            winner = player;
         }
 
         // If the board is full and no win, it's a draw
-        else if (isBoardFull()) {
+        if (isBoardFull()) {
             gameOver = true;
             winner = -1;  // Draw
         }
 
-        switchPlayer();
+//        switchPlayer();
         return true;  // Move is successful
     }
 
-    @Override public int getBoardWidth()
-    {
+    public int getBoardWidth() {
         return width;
     }
 
-    @Override public String getPlayerMark(int player)
-    {
-        if(player == 0){
-            return "O";
-        }else{
-            return "X";
-        }
+    public void switchPlayer() {
+        currentPlayer = (currentPlayer + 1) % TOTAL_PLAYERS;  // Switch to the next player
     }
 
-    private void switchPlayer() {
-        currentPlayer = (currentPlayer + 1) % TOTAL_PLAYERS;  // Switch to the next player
+    public boolean playMarkAt(int row, int col, int i) {
+        if(i==0){
+            board[row][col] = 1;
+        }else if (i==1){
+            board[row][col] = 2;
+        }
+        return true;
+    }
+
+    public String getPlayerMark(int player) {
+        if(currentPlayer == 0){
+            return "O";
+        }else if(currentPlayer == 1){
+            return "X";
+        }else{
+            return "";
+        }
     }
 
     public boolean isBoardFull() {
@@ -131,8 +137,8 @@ public class GameBoard implements IGameBoard {
         return true;
     }
 
-    public boolean isPositionTaken(int row, int col){
-        return board[row][col] != 0;
+    public boolean isPositionEmpty(int row, int col){
+        return board[row][col] == 0;
     }
 
     private boolean checkWin(int col, int row) {
@@ -148,7 +154,6 @@ public class GameBoard implements IGameBoard {
         }
         return board[row][0] != 0; // Check if the first cell is not empty
     }
-
 
     private boolean checkColumn(int col) {
         for (int row = 0; row < rows; row++) {

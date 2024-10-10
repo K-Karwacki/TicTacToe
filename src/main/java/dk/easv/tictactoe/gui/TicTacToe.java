@@ -31,7 +31,6 @@ public class TicTacToe extends Application
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/views/StarterWindow.fxml"));
         Parent scene = loader.load();
-        Stage Stage = new Stage();
         stage.setScene(new Scene(scene));
         stage.setResizable(false);
         stage.setTitle("Tic Tac Toe");

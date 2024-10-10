@@ -3,7 +3,10 @@ package dk.easv.tictactoe.gui.controller;
 
 // Java imports
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+
+import dk.easv.tictactoe.bll.MiniMax;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +23,7 @@ import dk.easv.tictactoe.bll.IGameBoard;
  *
  * @author EASV
  */
-public class TicTacViewController implements Initializable
+public class TicTacAiController implements Initializable
 {
     @FXML
     private Label lblPlayer;
@@ -30,8 +33,9 @@ public class TicTacViewController implements Initializable
 
     @FXML
     private GridPane gridPane;
-    
-    private static final String TXT_PLAYER = "Next move: ";
+
+
+    private static final String TXT_PLAYER = "Player vs Computer";
     private IGameBoard game;
 
     /**
@@ -42,27 +46,18 @@ public class TicTacViewController implements Initializable
     @FXML
     private void handleButtonAction(ActionEvent event)
     {
-        try
-        {
-            Integer row = GridPane.getRowIndex((Node) event.getSource());
-            Integer col = GridPane.getColumnIndex((Node) event.getSource());
-            int r = (row == null) ? 0 : row;
-            int c = (col == null) ? 0 : col;
-            int player = game.getNextPlayer();
+        Integer row = GridPane.getRowIndex((Node) event.getSource());
+        Integer col = GridPane.getColumnIndex((Node) event.getSource());
 
-            if (game.play(c, r, game.getCurrentPlayer()))
-            {
-                ((Button) event.getSource()).setText(game.getPlayerMark(game.getCurrentPlayer()));
-                game.switchPlayer();
-                setPlayer();
+        Button b = (Button)event.getSource();
 
-                if(game.isGameOver()){
-                    displayWinner(game.getWinner());
-                }
+        if(game.play(row,col, 0)){
+            b.setText("O");
+            game.switchPlayer();
+            handleAIMove();
+            if(game.isGameOver()){
+                displayWinner(game.getWinner());
             }
-        } catch (Exception e)
-        {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -75,8 +70,8 @@ public class TicTacViewController implements Initializable
     private void handleNewGame(ActionEvent event)
     {
         game.newGame();
-        setPlayer();
         clearBoard();
+        lblPlayer.setText(TXT_PLAYER);
     }
 
     /**
@@ -93,17 +88,30 @@ public class TicTacViewController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        game = new GameBoard();
-        setPlayer();
+        game = new GameBoard(3);
         initBoard();
+        lblPlayer.setText(TXT_PLAYER);
     }
 
     /**
-     * Set the next player
-     */
-    private void setPlayer()
-    {
-        lblPlayer.setText(TXT_PLAYER + game.getPlayerMark(game.getNextPlayer()));
+    * Handle AI move
+    */
+    private void handleAIMove(){
+        if(game.getCurrentPlayer()== 1){
+            int[] bestMove = MiniMax.getBestMove(game);
+            if(game.play(bestMove[0], bestMove[1], 1)){
+                System.out.println(bestMove[0] + " : "+bestMove[1]);
+                for(Node n : gridPane.getChildren())
+                {
+                    if (GridPane.getRowIndex(n) == bestMove[0]
+                        && GridPane.getColumnIndex(n) == bestMove[1]){
+                        ((Button)n).setText("X");
+                        game.switchPlayer();
+                    }
+                }
+
+            }
+        }
     }
 
 
@@ -115,10 +123,10 @@ public class TicTacViewController implements Initializable
     {
         String message = switch (winner)
             {
-                case -1 -> "It's a draw :-(";
-                case 1 -> "Player X wins!!!";
-                case 0 -> "Player O wins!!!";
-                default -> "";
+                case 0 -> "Player: wins!!!";
+                case 1 -> "Computer wins :(, keep trying ;)";
+                case -1 -> "It's a draw!";
+                default -> "TicTacToe";
             };
         lblPlayer.setText(message);
     }
@@ -135,6 +143,9 @@ public class TicTacViewController implements Initializable
         }
     }
 
+    /**
+     * Init board buttons and setConstraints for gridPane
+     */
     private void initBoard(){
         int width = game.getBoardWidth();
         for(int i = 0; i<width; i++){

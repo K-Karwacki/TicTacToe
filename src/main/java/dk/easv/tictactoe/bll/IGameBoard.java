@@ -24,13 +24,19 @@ public interface IGameBoard
      * @return true if the move is accepted, otherwise false. If gameOver ==
      * true this method will always return false.
      */
-    boolean play(int col, int row);
+    boolean play(int col, int row, int player);
 
+
+    /**
+     * Returns board width 3 -> (3x3) 5 -> (5x5)
+     */
     int getBoardWidth();
 
-    String getPlayerMark(int player);
 
-    boolean isPositionTaken(int row, int col);
+    /**
+     * returns true if board[row][col] = 0, empty state
+     */
+    boolean isPositionEmpty(int row, int col);
 
 
     boolean isBoardFull();
@@ -53,5 +59,29 @@ public interface IGameBoard
      * Resets the game to a new game state.
      */
     void newGame();
+
+    /**
+     * Returns current player 0 or 1
+     */
     int getCurrentPlayer();
+    /**
+     * sets board[row][col] to 0, empty state
+     */
+    void resetPosition(int row, int col);
+    /**
+     * Returns value on board[row][col] 0,1,2
+     */
+    int getPosition(int row, int col);
+    /**
+     * Switches players from 1 to 0, from 0 to 1
+     */
+    void switchPlayer();
+    /**
+     * Help function for Minimax algorithm
+     */
+    boolean playMarkAt(int row, int col, int i);
+    /**
+     * returns "O" for player 0, and "X" for player 1
+     */
+    String getPlayerMark(int player);
 }

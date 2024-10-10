@@ -1,8 +1,4 @@
 #pane {
-    -fx-background-image: url(../images/background.jpg);
-    -fx-background-repeat: stretch;   
-    -fx-background-position: center;
-}
-#btn1{
-
+    -fx-font-size: 50px;
+    -fx-color:gray;
 }
