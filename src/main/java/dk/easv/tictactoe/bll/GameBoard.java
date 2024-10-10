@@ -45,7 +45,7 @@ public class GameBoard implements IGameBoard {
         // Reset game state
         gameOver = false;
         winner = -1; // No winner yet
-        currentPlayer = 0; // Reset to Player 1
+        currentPlayer = 0;
     }
 
     public int getCurrentPlayer()
@@ -170,7 +170,6 @@ public class GameBoard implements IGameBoard {
 
         for (int i = 0; i < rows; i++) {
             if (board[i][i] != board[0][0]) {
-//                System.out.println(board[i][i] + " " + board[0][0]);
                 diagonal1 = false; // Not a win
             }
             if (board[i][rows - 1 - i] != board[0][rows - 1]) {

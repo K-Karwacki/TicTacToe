@@ -19,7 +19,6 @@
             <Font size="53.0" />
          </font>
       </Label>
-      <Button fx:id="btnStart" layoutX="14.0" layoutY="499.0" mnemonicParsing="false" onAction="#onBtnStart" prefHeight="81.0" prefWidth="166.0" text="Player vs Player" />
-      <Button fx:id="btnStartAI" layoutX="14" layoutY="300" mnemonicParsing="false" onAction="#onBtnStartAi" prefHeight="81.0" prefWidth="166.0" text="Player vs Computer" />
+      <Button fx:id="btnStart" layoutX="14.0" layoutY="499.0" mnemonicParsing="false" onAction="#onBtnStart" prefHeight="81.0" prefWidth="166.0" text="Start!" />
    </children>
 </AnchorPane>

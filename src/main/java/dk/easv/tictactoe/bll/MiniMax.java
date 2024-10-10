@@ -11,7 +11,13 @@ public class MiniMax
 
   public MiniMax(){}
 
-  public static int minimax(IGameBoard board, int depth,int alpha, int beta, boolean isMax){
+  /**
+   * Method simulates moves by switching between X and O and returns the highest value move for the X player. Recursion terminates and returns the highest value move when a terminal node or when the maximum search depth was reached.
+   * @param board - IGameBoard interface to get board info and simulate play
+   * @param depth - limit for the recursive minimax method
+   * @param isMax - maximising or minimising player
+   */
+  private static int minimax(IGameBoard board, int depth,boolean isMax){
       int boardVal = evaluateBoard(board, depth);
       if(Math.abs(boardVal) > 0 || board.isBoardFull() || depth ==0){
         return boardVal;
@@ -24,12 +30,8 @@ public class MiniMax
           for(int col = 0; col<board.getBoardWidth(); col++){
             if(board.isPositionEmpty(row, col)){
               if(board.playMarkAt(row, col, 1)){
-                highestVal = Math.max(highestVal, minimax(board, depth -1, alpha, beta, false));
+                highestVal = Math.max(highestVal, minimax(board, depth -1, false));
                 board.resetPosition(row,col);
-                alpha= Math.max(alpha,highestVal);
-                if(alpha >= beta){
-                  return highestVal;
-                }
               };
             }
           }
@@ -41,12 +43,8 @@ public class MiniMax
           for(int col=0; col<board.getBoardWidth(); col++){
             if(board.isPositionEmpty(row, col)){
               if(board.playMarkAt(row, col, 0)){
-                lowestVal = Math.min(lowestVal, minimax(board, depth - 1, alpha, beta, true));
+                lowestVal = Math.min(lowestVal, minimax(board, depth - 1, true));
                 board.resetPosition(row,col);
-                beta = Math.min(beta, lowestVal);
-                if(beta <= alpha){
-                  return lowestVal;
-                }
               }
             }
           }
@@ -55,39 +53,25 @@ public class MiniMax
       }
   }
 
-  public static int[] getBestMove(IGameBoard board){
-    int[] bestMove = new int[]{1, 1};
-    int bestValue = Integer.MIN_VALUE;
 
-    for(int row=0; row<board.getBoardWidth(); row++){
-      for (int col=0; col<board.getBoardWidth(); col++){
-        if(board.isPositionEmpty(row,col)){
-          board.playMarkAt(row,col, 1);
-          int moveValue = minimax(board, 6, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
-          board.resetPosition(row,col);
-          if(moveValue>bestValue){
-            bestMove[0] = row;
-            bestMove[1] = col;
-            bestValue = moveValue;
-          }
-        }
-      }
-    }
-    return bestMove;
-  }
 
-  public static int evaluateBoard(IGameBoard board, int depth)
+  /**
+   * evaluate given board and returns:
+   * (10 + depth) if computer wins in given combination,
+   * (-10 - depth) if computer loses in given combination
+   * @param board - IGameBoard interface to get board info
+   * @param depth - limit for the recursive minimax method
+   */
+  private static int evaluateBoard(IGameBoard board, int depth)
   {
     int boardWidth = board.getBoardWidth();
     String rowCount = "";
     String xWin = "222";
     String oWin = "111";
-//    System.out.println(board[0[0]]);
 
-    //Check if x or o wins on rows
+    //Check if X or O wins on rows
     for(int row=0; row<boardWidth; row++){
       for(int col=0; col<boardWidth; col++){
-//        System.out.println("Row: "+ row + " Column: " + col + " Player: " + board.getPosition(row, col));
         rowCount += board.getPosition(row,col);
         if(rowCount.equals(xWin)){
           return 10 + depth;
@@ -138,5 +122,31 @@ public class MiniMax
     }
 
     return 0;
+  }
+
+
+  /**
+   * public method to connect with game
+   * @param board - IGameBoard interface to get board info, simulates the best move and then returns the best move
+   */
+  public static int[] getBestMove(IGameBoard board){
+    int[] bestMove = new int[]{-1, -1};
+    int bestValue = Integer.MIN_VALUE;
+
+    for(int row=0; row<board.getBoardWidth(); row++){
+      for (int col=0; col<board.getBoardWidth(); col++){
+        if(board.isPositionEmpty(row,col)){
+          board.playMarkAt(row,col, 1);
+          int moveValue = minimax(board, 6, false);
+          board.resetPosition(row,col);
+          if(moveValue>bestValue){
+            bestMove[0] = row;
+            bestMove[1] = col;
+            bestValue = moveValue;
+          }
+        }
+      }
+    }
+    return bestMove;
   }
 }
