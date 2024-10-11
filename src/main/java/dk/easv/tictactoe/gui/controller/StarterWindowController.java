@@ -2,6 +2,7 @@ package dk.easv.tictactoe.gui.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,24 +14,8 @@ public class StarterWindowController {
 
 
         public Button btnStart;
-        public Button btnStartAI;
 
 
-        public void onBtnStartAi(ActionEvent event) throws IOException {
-
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/views/TicTacAiView.fxml"));
-                Parent scene = loader.load();
-                Stage stage = new Stage();
-
-                stage.setScene(new Scene(scene));
-                stage.setResizable(false);
-                stage.setTitle("TicTacToe PvC");
-                stage.centerOnScreen();
-
-                stage.show();
-
-        }
         public void onBtnStart(ActionEvent event) throws IOException {
 
                 FXMLLoader loader = new FXMLLoader();
@@ -39,10 +24,14 @@ public class StarterWindowController {
                 Stage stage = new Stage();
                 stage.setScene(new Scene(scene));
                 stage.setResizable(false);
-                stage.setTitle("TicTacToe PvP");
+                stage.setTitle("TicTacToe");
                 stage.centerOnScreen();
 
                 stage.show();
+
+                Stage currentStage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                currentStage.close();
+
 
         }
 

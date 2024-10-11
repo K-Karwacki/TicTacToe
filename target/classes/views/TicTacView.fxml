@@ -25,12 +25,13 @@
       </Label>
    </top>
    <bottom>
-      <HBox style="-fx-margin: 5px">
+
+      <HBox style="-fx-margin: 5px; -fx-display: space-between;">
          <BorderPane.margin>
             <Insets top="10.0" />
          </BorderPane.margin>
          <Button fx:id="btnNewGame" mnemonicParsing="false" onAction="#handleNewGame" text="New Game" BorderPane.alignment="CENTER_RIGHT" style="-fx-font-size: 20px"> </Button>
-         <Button fx:id="btnSwitchMode" mnemonicParsing="false" onAction="#handleSwitchMode" text="Switch mode" BorderPane.alignment="CENTER_LEFT" style="-fx-font-size: 20px">
+         <Button fx:id="btnSwitchMode" mnemonicParsing="false" onAction="#handleSwitchMode" text="Switch mode" BorderPane.alignment="CENTER_LEFT" style="-fx-font-size: 20px; -fx-margin-left: 20px;">
             <BorderPane.margin>
                <Insets top="10.0" />
             </BorderPane.margin>

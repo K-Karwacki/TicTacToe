@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 // Project imports
 import dk.easv.tictactoe.bll.GameBoard;
 import dk.easv.tictactoe.bll.IGameBoard;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -53,6 +54,7 @@ public class TicTacViewController implements Initializable
 
             Button b = (Button)event.getSource();
 
+            switchColors();
             if(aiMode){
                 if(game.play(row,col, 0)){
                     b.setText("O");
@@ -66,7 +68,8 @@ public class TicTacViewController implements Initializable
             }else{
                 if (game.play(row, col, game.getCurrentPlayer()))
                 {
-                    ((Button) event.getSource()).setText(game.getPlayerMark(game.getCurrentPlayer()));
+                    b.setText(game.getPlayerMark(game.getCurrentPlayer()));
+                    b.setDisable(true);
                     game.switchPlayer();
                     setPlayer();
 
@@ -163,6 +166,16 @@ public class TicTacViewController implements Initializable
             msg = "Player vs Player - Next move: " + nextMoveMark;
         }
         lblPlayer.setText(msg);
+    }
+
+    public void switchColors(){
+        double rand = Math.random() * 365;
+        double rand2 = Math.random() * 365;
+        double rand3 = Math.random() * 365;
+        gridPane.getChildren().forEach(node -> {
+            Button b = (Button) node;
+            b.setStyle("-fx-color: rgb("+rand+","+rand2+","+rand3 +");");
+        });
     }
 
 
